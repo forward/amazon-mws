@@ -19,10 +19,11 @@ module AmazonMWS
       @secret_access_key = params['secret_access_key']
       @merchant_id       = params['merchant_id']
       @marketplace_id    = params['marketplace_id']
+      @version           = params['version'] || AmazonMWS::Authentication::VERSION
       
       raise MissingConnectionOptions if [@access_key, @secret_access_key, @merchant_id, @marketplace_id].any? {|option| option.nil?}
       
-      @http = connect
+        @http = connect
     end
     
     # Create the Net::HTTP object to use for this connection
@@ -66,20 +67,23 @@ module AmazonMWS
     # Create the signed authentication query string.
     # Add this query string to the path WITHOUT prepending the server address.
     def prepare_path(verb, path, query_params)
-      query_string = authenticate_query_string(verb, query_params)
+      query_string = authenticate_query_string(verb, path, query_params)
       return "#{path}?#{query_string}"
     end
     
     # Generates the authentication query string used by Amazon.
     # Takes the http method and the query string of the request and returns the authenticated query string
-    def authenticate_query_string(verb, query_params = {})        
+    def authenticate_query_string(verb, path, query_params = {})        
       Authentication::QueryString.new(
         :verb              => verb,
         :query_params      => query_params,
         :access_key        => @access_key,
         :secret_access_key => @secret_access_key,
         :merchant_id       => @merchant_id,
-        :marketplace_id    => @marketplace_id
+        :marketplace_id    => @marketplace_id,
+        :version           => @version,
+        :server            => @server,
+        :path              => path
       )
     end
     
