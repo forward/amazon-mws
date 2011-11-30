@@ -9,8 +9,11 @@ class AmazonMWS::Authentication
     def initialize(queryparams = {}, params = {})
       verb   = params[:verb]
       secret = params[:secret_access_key]
+      server = params[:server]
+      path = params[:path] || "/"
       # Create the string to sign
-      string = string_to_sign(verb, canonical_querystring(queryparams))
+      string = string_to_sign(verb, server, path, canonical_querystring(queryparams))
+      puts "String to sign:\n#{string}" if AmazonMWS::Base.debug
       self << sign(string, secret)
     end
   
@@ -24,9 +27,9 @@ class AmazonMWS::Authentication
     
     memoize :sign
     
-    def string_to_sign(verb, querystring)
+    def string_to_sign(verb, server, path, querystring)
       verb   = verb.to_s.upcase
-      string = "#{verb}\n#{AmazonMWS::DEFAULT_HOST}\n/\n#{querystring}"
+      string = "#{verb}\n#{server}\n#{path}\n#{querystring}"
     end
     
     memoize :string_to_sign
