@@ -1,10 +1,8 @@
 require 'test/unit'
 require 'rubygems'
-
 require 'yaml'
-#require 'fakeweb'
 
-require File.join(File.dirname(__FILE__), '..', 'lib', 'amazon', 'mws')
+require File.join(File.dirname(__FILE__), '..', 'lib', 'amazonmws')
 
 def xml_for(name)
   Pathname.new(File.dirname(__FILE__)).expand_path.dirname.join("examples/xml/#{name}.xml")

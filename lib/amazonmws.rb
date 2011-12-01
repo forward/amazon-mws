@@ -28,8 +28,6 @@ require 'builder'
 module AmazonMWS
 end
 
-
-
 require 'lib/memoizable'
 
 require 'feed_builder'
@@ -37,13 +35,18 @@ require 'feed_enumerations'
 require 'feed'
 require 'report_enumerations'
 require 'report'
-
+require 'orders'
 
 require 'response'
 require 'feed_submission'
 require 'report_request'
 require 'report_info'
 require 'report_schedule'
+require 'shipping_address'
+require 'order_total'
+require 'order'
+require 'list_orders_result'
+
 Dir.glob(File.join(File.dirname(__FILE__), 'response/*.rb')).each {|f| require f }
 
 require 'base'
@@ -60,6 +63,7 @@ require 'authentication/signature'
 AmazonMWS::Base.class_eval do
   include AmazonMWS::Feed
   include AmazonMWS::Report
+  include AmazonMWS::Orders
 end
 
 require_library_or_gem 'xmlsimple', 'xml-simple' unless defined? XmlSimple
